@@ -5,6 +5,9 @@
 
   import { TasksCollection } from "/imports/db/TasksCollection";
 
+  const handler = Meteor.subscribe("tasks");
+  let isLoading = true;
+
   const hideCompletedFilter = { isChecked: { $ne: true } };
   const logout = () => Meteor.logout();
 
@@ -23,21 +26,25 @@
   $m: {
     user = Meteor.user();
 
-    const userFilter = user ? { userId: user._id } : {};
-    const pendingOnlyFilter = { ...hideCompletedFilter, ...userFilter };
+    if (user) {
+      isLoading = !handler.ready();
 
-    tasks = user
-      ? TasksCollection.find(hideCompleted ? pendingOnlyFilter : userFilter, {
-          sort: { createdAt: -1 },
-        }).fetch()
-      : [];
+      const userFilter = user ? { userId: user._id } : {};
+      const pendingOnlyFilter = { ...hideCompletedFilter, ...userFilter };
 
-    incompleteCount = user
-      ? TasksCollection.find(pendingOnlyFilter).count()
-      : 0;
+      tasks = user
+        ? TasksCollection.find(hideCompleted ? pendingOnlyFilter : userFilter, {
+            sort: { createdAt: -1 },
+          }).fetch()
+        : [];
 
-    pendingTasksTitle =
-      incompleteCount > 0 ? `(${incompleteCount} pending tasks)` : "";
+      incompleteCount = user
+        ? TasksCollection.find(pendingOnlyFilter).count()
+        : 0;
+
+      pendingTasksTitle =
+        incompleteCount > 0 ? `(${incompleteCount} pending tasks)` : "";
+    }
   }
 </script>
 
@@ -63,6 +70,10 @@
           {hideCompleted ? "Show" : "Hide"} completed tasks
         </button>
       </div>
+
+      {#if isLoading}
+        <div class="loading">loading...</div>
+      {/if}
 
       <ul class="tasks">
         {#each tasks as task (task._id)}

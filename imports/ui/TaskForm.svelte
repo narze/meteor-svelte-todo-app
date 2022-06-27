@@ -1,6 +1,4 @@
 <script>
-  export let user
-
   let newTask
 
   function handleSubmit() {
