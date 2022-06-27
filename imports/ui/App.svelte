@@ -1,19 +1,21 @@
 <script>
   import Task from "./Task.svelte";
+  import TaskForm from "./TaskForm.svelte";
 
-  const getTasks = () => [
-    { _id: "task_1", text: "This is task 1" },
-    { _id: "task_2", text: "This is task 2" },
-    { _id: "task_3", text: "This is task 3" },
-  ];
+  import { TasksCollection } from "/imports/api/TasksCollection";
+
+  // $m: tasks = TasksCollection.find({}).fetch();
+  $m: tasks = TasksCollection.find({}, { sort: { createdAt: -1 } }).fetch();
 </script>
 
 <div class="container">
   <h1>Todo in Meteor & Svelte</h1>
 
   <ul>
-    {#each getTasks() as task (task._id)}
+    {#each tasks as task (task._id)}
       <Task {task} />
     {/each}
   </ul>
+
+  <TaskForm />
 </div>
