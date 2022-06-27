@@ -10,7 +10,7 @@
   }
 </script>
 
-<form on:submit|preventDefault={handleSubmit}>
+<form class="task-form" on:submit|preventDefault={handleSubmit}>
   <input type="text" name="text" placeholder="New task" bind:value={newTask} />
   <button type="submit">Add Task</button>
 </form>

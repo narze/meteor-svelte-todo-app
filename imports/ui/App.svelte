@@ -8,14 +8,22 @@
   $m: tasks = TasksCollection.find({}, { sort: { createdAt: -1 } }).fetch();
 </script>
 
-<div class="container">
-  <h1>Todo in Meteor & Svelte</h1>
+<div class="app">
+  <header>
+    <div class="app-bar">
+      <div class="app-header">
+        <h1>📝️ Todo in Meteor.js & Svelte</h1>
+      </div>
+    </div>
+  </header>
 
-  <ul>
-    {#each tasks as task (task._id)}
-      <Task {task} />
-    {/each}
-  </ul>
+  <div class="main">
+    <TaskForm />
 
-  <TaskForm />
+    <ul class="tasks">
+      {#each tasks as task (task._id)}
+        <Task {task} />
+      {/each}
+    </ul>
+  </div>
 </div>
