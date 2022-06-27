@@ -3,7 +3,7 @@
   import Task from "./Task.svelte";
   import TaskForm from "./TaskForm.svelte";
 
-  import { TasksCollection } from "/imports/api/TasksCollection";
+  import { TasksCollection } from "/imports/db/TasksCollection";
 
   const hideCompletedFilter = { isChecked: { $ne: true } };
   const logout = () => Meteor.logout();
@@ -55,7 +55,8 @@
       <div class="user" on:click={logout}>
         {user.username} 🚪
       </div>
-      <TaskForm {user} />
+
+      <TaskForm />
 
       <div class="filter">
         <button on:click={() => (hideCompleted = !hideCompleted)}>

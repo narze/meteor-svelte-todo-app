@@ -1,14 +1,29 @@
 import { Meteor } from "meteor/meteor"
 import { Accounts } from "meteor/accounts-base"
+import { TasksCollection } from "/imports/db/TasksCollection"
+import "/imports/api/tasksMethods"
 
-import { TasksCollection } from "/imports/api/TasksCollection"
+const insertTask = (taskText, user) =>
+  TasksCollection.insert({
+    text: taskText,
+    userId: user._id,
+    createdAt: new Date(),
+  })
 
-const insertTask = (text) => TasksCollection.insert({ text })
+const SEED_USERNAME = "meteorite"
+const SEED_PASSWORD = "password"
 
 Meteor.startup(() => {
-  // code to run on server at startup
+  if (!Accounts.findUserByUsername(SEED_USERNAME)) {
+    Accounts.createUser({
+      username: SEED_USERNAME,
+      password: SEED_PASSWORD,
+    })
+  }
+
+  const user = Accounts.findUserByUsername(SEED_USERNAME)
+
   if (TasksCollection.find().count() === 0) {
-    console.log("Inserting initial tasks")
     ;[
       "First Task",
       "Second Task",
@@ -17,18 +32,6 @@ Meteor.startup(() => {
       "Fifth Task",
       "Sixth Task",
       "Seventh Task",
-    ].forEach(insertTask)
-  } else {
-    console.log("Already have tasks")
-  }
-
-  const SEED_USERNAME = "meteorite"
-  const SEED_PASSWORD = "password"
-
-  if (!Accounts.findUserByUsername(SEED_USERNAME)) {
-    Accounts.createUser({
-      username: SEED_USERNAME,
-      password: SEED_PASSWORD,
-    })
+    ].forEach((taskText) => insertTask(taskText, user))
   }
 })
