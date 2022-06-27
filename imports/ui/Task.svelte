@@ -8,6 +8,12 @@
       $set: { isChecked: !task.isChecked },
     });
   }
+
+  function deleteTask() {
+    if (confirm("Delete this task?")) {
+      TasksCollection.remove(task._id);
+    }
+  }
 </script>
 
 <li>
@@ -17,5 +23,8 @@
     checked={!!task.inChecked}
     on:click={toggleChceked}
   />
-  {task.text}
+  <span>
+    {task.text}
+  </span>
+  <button class="delete" on:click={deleteTask}>&times;</button>
 </li>
