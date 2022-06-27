@@ -4,11 +4,17 @@
 
   import { TasksCollection } from "/imports/api/TasksCollection";
 
+  const hideCompletedFilter = { isChecked: { $ne: true } };
+
   // $m: tasks = TasksCollection.find({}).fetch();
-  $m: tasks = TasksCollection.find(
-    hideCompleted ? { isChecked: { $ne: true } } : {},
-    { sort: { createdAt: -1 } }
-  ).fetch();
+  $m: tasks = TasksCollection.find(hideCompleted ? hideCompletedFilter : {}, {
+    sort: { createdAt: -1 },
+  }).fetch();
+
+  $m: incompleteCount = TasksCollection.find(hideCompletedFilter).count();
+
+  $m: pendingTasksTitle =
+    incompleteCount > 0 ? `(${incompleteCount} pending tasks)` : "";
 
   let hideCompleted = false;
 </script>
@@ -17,7 +23,7 @@
   <header>
     <div class="app-bar">
       <div class="app-header">
-        <h1>📝️ Todo in Meteor.js & Svelte</h1>
+        <h1>📝️ Todo in Meteor.js & Svelte {pendingTasksTitle}</h1>
       </div>
     </div>
   </header>
