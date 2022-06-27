@@ -20,7 +20,7 @@
   <input
     type="checkbox"
     readonly
-    checked={!!task.inChecked}
+    checked={!!task.isChecked}
     on:click={toggleChceked}
   />
   <span>
