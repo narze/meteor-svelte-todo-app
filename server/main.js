@@ -1,4 +1,6 @@
 import { Meteor } from "meteor/meteor"
+import { Accounts } from "meteor/accounts-base"
+
 import { TasksCollection } from "/imports/api/TasksCollection"
 
 const insertTask = (text) => TasksCollection.insert({ text })
@@ -18,5 +20,15 @@ Meteor.startup(() => {
     ].forEach(insertTask)
   } else {
     console.log("Already have tasks")
+  }
+
+  const SEED_USERNAME = "meteorite"
+  const SEED_PASSWORD = "password"
+
+  if (!Accounts.findUserByUsername(SEED_USERNAME)) {
+    Accounts.createUser({
+      username: SEED_USERNAME,
+      password: SEED_PASSWORD,
+    })
   }
 })
